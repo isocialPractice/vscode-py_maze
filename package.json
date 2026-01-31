@@ -1,0 +1,60 @@
+{
+  "name": "vscode-pymaze",
+  "displayName": "VS Code Maze",
+  "description": "A maze game generator and player for VS Code",
+  "version": "1.0.0",
+  "publisher": "isocialPractice",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-pymaze.generateMaze",
+        "title": "Maze: Generate New Maze"
+      },
+      {
+        "command": "vscode-pymaze.playMaze",
+        "title": "Maze: Play Maze Game"
+      }
+    ],
+    "configuration": {
+      "title": "VS Code Maze",
+      "properties": {
+        "vscode-pymaze.width": {
+          "type": "number",
+          "default": 9,
+          "minimum": 3,
+          "maximum": 25,
+          "description": "Width of the maze in cells"
+        },
+        "vscode-pymaze.height": {
+          "type": "number",
+          "default": 11,
+          "minimum": 3,
+          "maximum": 25,
+          "description": "Height of the maze in cells"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0"
+  }
+}
