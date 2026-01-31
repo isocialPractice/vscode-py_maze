@@ -17,8 +17,8 @@ export function activate(context: vscode.ExtensionContext) {
     console.log('VS Code Maze extension is now active!');
 
     // Command: Generate a new maze and display it in the output channel
-    const generateMazeCommand = vscode.commands.registerCommand('vscode-pymaze.generateMaze', () => {
-        const config = vscode.workspace.getConfiguration('vscode-pymaze');
+    const generateMazeCommand = vscode.commands.registerCommand('vscode-py_maze.generateMaze', () => {
+        const config = vscode.workspace.getConfiguration('vscode-py_maze');
         const width = config.get<number>('width', 9);
         const height = config.get<number>('height', 11);
 
@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // Command: Open the maze game panel directly
-    const playMazeCommand = vscode.commands.registerCommand('vscode-pymaze.playMaze', () => {
+    const playMazeCommand = vscode.commands.registerCommand('vscode-py_maze.playMaze', () => {
         MazeGamePanel.createOrShow(context.extensionUri);
     });
 

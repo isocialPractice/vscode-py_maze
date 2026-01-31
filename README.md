@@ -22,8 +22,8 @@ Configure the extension in VS Code settings:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `vscode-pymaze.width` | 9 | Width of the maze in cells (3-25) |
-| `vscode-pymaze.height` | 11 | Height of the maze in cells (3-25) |
+| `vscode-py_maze.width` | 9 | Width of the maze in cells (3-25) |
+| `vscode-py_maze.height` | 11 | Height of the maze in cells (3-25) |
 
 ## How to Play
 
@@ -53,7 +53,7 @@ Configure the extension in VS Code settings:
 ### Building the Extension
 
 ```bash
-cd vscode-pymaze-extension
+cd vscode-py_maze-extension
 npm install
 npm run compile
 ```

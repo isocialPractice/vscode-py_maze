@@ -1,5 +1,5 @@
 {
-  "name": "vscode-pymaze",
+  "name": "vscode-py_maze",
   "displayName": "VS Code Maze",
   "description": "A maze game generator and player for VS Code",
   "version": "1.0.0",
@@ -15,25 +15,25 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-pymaze.generateMaze",
+        "command": "vscode-py_maze.generateMaze",
         "title": "Maze: Generate New Maze"
       },
       {
-        "command": "vscode-pymaze.playMaze",
+        "command": "vscode-py_maze.playMaze",
         "title": "Maze: Play Maze Game"
       }
     ],
     "configuration": {
       "title": "VS Code Maze",
       "properties": {
-        "vscode-pymaze.width": {
+        "vscode-py_maze.width": {
           "type": "number",
           "default": 9,
           "minimum": 3,
           "maximum": 25,
           "description": "Width of the maze in cells"
         },
-        "vscode-pymaze.height": {
+        "vscode-py_maze.height": {
           "type": "number",
           "default": 11,
           "minimum": 3,

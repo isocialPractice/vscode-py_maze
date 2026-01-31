@@ -51,7 +51,7 @@ export class MazeGamePanel {
             this._maze = maze;
         } else {
             // Generate a default maze
-            const config = vscode.workspace.getConfiguration('vscode-pymaze');
+            const config = vscode.workspace.getConfiguration('vscode-py_maze');
             const width = config.get<number>('width', 9);
             const height = config.get<number>('height', 11);
             const generator = new MazeGenerator(width, height);
@@ -69,7 +69,7 @@ export class MazeGamePanel {
             message => {
                 switch (message.command) {
                     case 'newMaze':
-                        const config = vscode.workspace.getConfiguration('vscode-pymaze');
+                        const config = vscode.workspace.getConfiguration('vscode-py_maze');
                         const width = config.get<number>('width', 9);
                         const height = config.get<number>('height', 11);
                         const generator = new MazeGenerator(width, height);
