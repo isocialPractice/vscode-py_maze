@@ -2,8 +2,10 @@
   "name": "vscode-py_maze",
   "displayName": "VS Code Maze",
   "description": "A maze game generator and player for VS Code",
-  "version": "1.0.0",
+  "version": "0.0.0-dev",
+  "author": "John Haugabook",
   "publisher": "isocialPractice",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -39,6 +41,25 @@
           "minimum": 3,
           "maximum": 25,
           "description": "Height of the maze in cells"
+        },
+        "vscode-py_maze.localWeather": {
+          "type": "boolean",
+          "default": false,
+          "description": "Style the maze from local weather and refresh every 60 seconds. When turned off, the maze keeps the style it last rendered."
+        },
+        "vscode-py_maze.weatherLatitude": {
+          "type": "number",
+          "default": 40.7128,
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Latitude used for the local weather lookup"
+        },
+        "vscode-py_maze.weatherLongitude": {
+          "type": "number",
+          "default": -74.006,
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Longitude used for the local weather lookup"
         }
       }
     }

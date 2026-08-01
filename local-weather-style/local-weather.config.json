@@ -1,0 +1,7 @@
+{
+  "_comment": "This project reads its toggle from the VS Code settings menu instead. See local-weather-style/STYLE.md section 5. These values record the defaults only.",
+  "enabled": false,
+  "refreshIntervalSeconds": 60,
+  "latitude": 40.7128,
+  "longitude": -74.006
+}
