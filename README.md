@@ -2,13 +2,33 @@
 
 A maze game generator and player for Visual Studio Code. This extension is a VS Code variation of the Python `py_maze` command-line game.
 
+**This tool runs completely independently without requiring any external agent, model, or AI assistance.** The core maze generation and gameplay functionality works offline with zero external dependencies.
+
 ## Features
 
 - **Generate Random Mazes**: Creates solvable mazes using the recursive backtracking algorithm
 - **Interactive Gameplay**: Play the maze game directly in VS Code using a webview panel
 - **Configurable Dimensions**: Set custom maze width and height through VS Code settings
 - **Multiple Control Options**: Use arrow keys, WASD, or on-screen buttons to navigate
-- **Local Weather Styling**: Optionally restyle the maze from real conditions at your location, refreshed every 60 seconds
+- **Optional Local Weather Styling**: Optionally restyle the maze from real conditions at your location, refreshed every 60 seconds (requires internet connection and works only in the US)
+
+## Independence & Requirements
+
+### Core Functionality (Always Works)
+✅ **100% Independent** - No external dependencies
+- Maze generation algorithm (recursive backtracking)
+- Interactive gameplay with keyboard/button controls
+- Configurable dimensions
+- Win detection and notifications
+- All core features work offline
+
+### Optional Weather Feature
+⚠️ **Optional Enhancement** - Requires internet connection
+- Fetches weather data from `https://api.weather.gov` (US National Weather Service)
+- Only works for US locations
+- Gracefully degrades if unavailable (keeps current styling)
+- Can be completely disabled in settings
+- **The maze game works perfectly without this feature**
 
 ## Commands
 
@@ -25,9 +45,9 @@ Configure the extension in VS Code settings:
 | --- | --- | --- |
 | `vscode-py_maze.width` | 9 | Width of the maze in cells (3-25) |
 | `vscode-py_maze.height` | 11 | Height of the maze in cells (3-25) |
-| `vscode-py_maze.localWeather` | `false` | Refresh the maze styling from local weather every 60 seconds |
-| `vscode-py_maze.weatherLatitude` | 40.7128 | Latitude used for the weather lookup (-90 to 90) |
-| `vscode-py_maze.weatherLongitude` | -74.006 | Longitude used for the weather lookup (-180 to 180) |
+| `vscode-py_maze.localWeather` | `false` | **[OPTIONAL]** Refresh the maze styling from local weather every 60 seconds (requires internet) |
+| `vscode-py_maze.weatherLatitude` | 40.7128 | **[OPTIONAL]** Latitude used for the weather lookup (-90 to 90) |
+| `vscode-py_maze.weatherLongitude` | -74.006 | **[OPTIONAL]** Longitude used for the weather lookup (-180 to 180) |
 
 ## How to Play
 
@@ -52,11 +72,19 @@ Configure the extension in VS Code settings:
 - `o` - Player
 - `E` - Exit
 
-## Local Weather Styling
+## Local Weather Styling (Optional Feature)
 
-The maze can restyle itself from real conditions at your location. Sky, wall,
+The maze can optionally restyle itself from real conditions at your location. Sky, wall,
 and accent colors follow the forecast, and a sun or moon, cloud band, and rain
 or snow layer are drawn behind the maze.
+
+**Important Notes:**
+- This feature is **completely optional** and **disabled by default**
+- The maze game works perfectly without weather styling
+- Requires an active internet connection
+- Only works for US locations (uses National Weather Service API)
+- If the API is unavailable, the maze keeps its current style
+- Network failures are handled gracefully (non-critical)
 
 ### Turning it on
 
@@ -118,19 +146,46 @@ npm run compile
 2. Press `F5` to launch the Extension Development Host
 3. Run the maze commands in the new window
 
+### Testing Independence
+
+The core functionality can be tested completely offline:
+1. Disconnect from the internet
+2. Ensure `vscode-py_maze.localWeather` is set to `false` (default)
+3. Run the "Maze: Play Maze Game" command
+4. The maze should generate and play perfectly
+
 ### Project Layout
 
 | Path | Contents |
 | --- | --- |
 | `src/extension.ts` | Command registration and activation |
-| `src/mazeGenerator.ts` | Recursive backtracking maze generation |
-| `src/mazeGamePanel.ts` | Webview panel, styling, and the weather refresh |
-| `media/weather/` | Sun, moon, cloud, rain, and snow SVGs used by the weather layer |
+| `src/mazeGenerator.ts` | Recursive backtracking maze generation (100% independent) |
+| `src/mazeGamePanel.ts` | Webview panel, styling, and the optional weather refresh |
+| `media/weather/` | Sun, moon, cloud, rain, and snow SVGs used by the optional weather layer |
 | `local-weather-style/` | Weather styling guide and recorded defaults |
 
 All webview markup and CSS live in `MazeGamePanel._getHtmlForWebview()` as a
 single template string. There is no separate stylesheet, so style changes are
 edits to that method.
+
+## Architecture
+
+### Core Components (Always Independent)
+```
+extension.ts ──> mazeGenerator.ts (Pure algorithm, no dependencies)
+     │
+     └──> mazeGamePanel.ts (Webview rendering)
+               │
+               ├──> Core maze display (Always works)
+               └──> Optional weather styling (Can fail gracefully)
+```
+
+### Dependency Management
+- **Zero runtime dependencies** for core functionality
+- Weather API is treated as an optional enhancement
+- All external calls are wrapped in try-catch blocks
+- Failed API calls never break the game
+- Status indicator shows weather availability
 
 ## License
 

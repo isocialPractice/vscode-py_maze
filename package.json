@@ -1,7 +1,7 @@
 {
   "name": "vscode-pymaze",
   "displayName": "VS Code Maze",
-  "description": "A maze game generator and player for VS Code",
+  "description": "A fully independent maze game generator and player for VS Code. Runs offline with zero dependencies. Optional weather styling available.",
   "version": "0.0.0-dev",
   "author": "John Haugabook",
   "publisher": "isocialPractice",

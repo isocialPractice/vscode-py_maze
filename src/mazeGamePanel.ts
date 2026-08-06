@@ -43,6 +43,9 @@ const CURRENT_RENDER = {
 /**
  * MazeGamePanel
  * Manages a webview panel for playing the maze game interactively.
+ * 
+ * This tool runs completely independently without requiring any external agent or model.
+ * The weather styling feature is optional and gracefully degrades if the API is unavailable.
  */
 export class MazeGamePanel {
     public static currentPanel: MazeGamePanel | undefined;
@@ -90,7 +93,7 @@ export class MazeGamePanel {
         if (maze) {
             this._maze = maze;
         } else {
-            // Generate a default maze
+            // Generate a default maze - completely independent, no external dependencies
             const config = vscode.workspace.getConfiguration('vscode-py_maze');
             const width = config.get<number>('width', 9);
             const height = config.get<number>('height', 11);
@@ -202,7 +205,7 @@ export class MazeGamePanel {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maze Game</title>
+    <title>Maze Game - Runs Independently</title>
     <style>
         /* Weather layer. Unset properties fall back to the editor theme. */
         :root {
@@ -355,6 +358,15 @@ export class MazeGamePanel {
             opacity: 0.3;
             cursor: not-allowed;
         }
+        .weather-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: var(--vscode-descriptionForeground);
+            opacity: 0.6;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -380,6 +392,7 @@ export class MazeGamePanel {
             <button class="move-btn" id="right">→</button>
         </div>
     </div>
+    <div class="weather-status" id="weatherStatus"></div>
 
     <script>
         (function() {
@@ -490,9 +503,9 @@ export class MazeGamePanel {
             render();
 
             // ---- Local weather refresh -------------------------------------
-            // Polls the NWS API every 60 seconds and repaints the weather layer
-            // by rewriting CSS custom properties, so no restart is needed.
-            // Documented in local-weather-style/STYLE.md.
+            // This feature is OPTIONAL and works independently. The maze game
+            // functions perfectly without it. When enabled, it polls the NWS API
+            // and gracefully handles failures by keeping the current style.
             const WEATHER = ${JSON.stringify({
                 enabled: weatherEnabled,
                 latitude,
@@ -513,6 +526,13 @@ export class MazeGamePanel {
             const HEDGE_TERMS = ['slight chance', 'chance', 'isolated', 'patchy'];
             // Minimum probability of precipitation, in percent, that counts as wet.
             const WET_PROBABILITY = 50;
+
+            function updateWeatherStatus(message) {
+                const statusEl = document.getElementById('weatherStatus');
+                if (statusEl && WEATHER.enabled) {
+                    statusEl.textContent = message;
+                }
+            }
 
             function toFahrenheit(value, unit) {
                 const degrees = Number(value);
@@ -587,32 +607,54 @@ export class MazeGamePanel {
             }
 
             async function refreshWeather() {
+                if (!WEATHER.enabled) { return; }
+                
                 try {
+                    updateWeatherStatus('Fetching weather...');
                     const headers = { 'Accept': 'application/geo+json' };
                     const pointsUrl = WEATHER.apiBase + '/points/' + WEATHER.latitude + ',' + WEATHER.longitude;
                     const pointsResponse = await fetch(pointsUrl, { headers });
-                    if (!pointsResponse.ok) { return; }
+                    
+                    if (!pointsResponse.ok) {
+                        updateWeatherStatus('Weather unavailable (keeping current style)');
+                        return;
+                    }
 
                     const points = await pointsResponse.json();
                     const forecastResponse = await fetch(points.properties.forecast, { headers });
-                    if (!forecastResponse.ok) { return; }
+                    
+                    if (!forecastResponse.ok) {
+                        updateWeatherStatus('Forecast unavailable (keeping current style)');
+                        return;
+                    }
 
                     const forecast = await forecastResponse.json();
                     const periods = forecast.properties.periods;
-                    if (!periods || !periods.length) { return; }
+                    
+                    if (!periods || !periods.length) {
+                        updateWeatherStatus('No forecast data (keeping current style)');
+                        return;
+                    }
 
                     applyWeather(categorize(periods[0]));
+                    const now = new Date().toLocaleTimeString();
+                    updateWeatherStatus('Weather updated: ' + now);
                 } catch (error) {
                     // A failed poll keeps the last rendered style rather than
                     // blanking the maze, so a dropped network is harmless.
+                    updateWeatherStatus('Weather error (keeping current style)');
+                    console.log('Weather fetch error (non-critical):', error);
                 }
             }
 
             // The toggle only gates the poll. When it is off the maze keeps the
             // style baked in by the most recent render_weather call.
             if (WEATHER.enabled) {
+                updateWeatherStatus('Weather enabled');
                 refreshWeather();
                 setInterval(refreshWeather, WEATHER.intervalMs);
+            } else {
+                updateWeatherStatus('');
             }
         })();
     </script>
