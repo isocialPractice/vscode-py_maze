@@ -154,9 +154,34 @@ is not read by this project. It is kept only as a record of the default state.
 
 ## 6. Applying a later render_weather call
 
+### Sourcing the directives
+
+The weather server is not registered as an MCP server for this repository, so
+there is no ambient `render_weather` tool to call. It lives in the companion
+`exercise-mcp` repository under `develop/weather-servers/py/weather-server/`,
+with its own virtual environment, and it runs over stdio:
+
+```python
+from mcp.client import Client
+from mcp.client.stdio import StdioServerParameters, stdio_client
+
+params = StdioServerParameters(command="python", args=["server.py"], cwd=SERVER_DIR)
+async with Client(stdio_client(params)) as client:
+    result = await client.call_tool("get_forecast", {"latitude": 40.7128, "longitude": -74.006})
+```
+
+`get_forecast` runs `render_weather` itself and appends the directives to its
+reply, so one call yields both the forecast prose and the three category
+values. Pass the same coordinates the `vscode-py_maze.weatherLatitude` and
+`vscode-py_maze.weatherLongitude` settings hold.
+
+### Applying them
+
 1. Read this file.
 2. Map the three directive values to the tables in section 3, and decide
-   `precipitating` from the reported probability.
+   `precipitating` from the reported probability. The directives do not carry
+   it, so read `probabilityOfPrecipitation.value` on the first forecast period
+   directly.
 3. Edit only the `:root` block, the `WEATHER_STYLES` lookup, and
    `CURRENT_RENDER` in `src/mazeGamePanel.ts`.
 4. Recompile with `npm run compile`.

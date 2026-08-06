@@ -14,7 +14,7 @@ state of the tree rather than a shipped release.
 | Item | State |
 | --- | --- |
 | Branch | `local-weather` |
-| Commits ahead of `main` | 0. All work is staged and uncommitted. |
+| Commits ahead of `main` | 3 |
 | Build | `npm run compile` passes with no TypeScript errors |
 | Tests | 14 categorization cases and 14 render assertions pass |
 | Published | No |
@@ -45,6 +45,14 @@ state of the tree rather than a shipped release.
   accent colors the weather styling uses. Registered through the `icon` field
   in `package.json`.
 - An `author` field in `package.json`.
+
+### Changed
+
+- Refreshed the recorded `render_weather` directives in `src/mazeGamePanel.ts`
+  from a live call to the MCP weather server. The initial paint moves from
+  `night` and `medium` to `day` and `hot`. Cloud cover stays `stormy` and the
+  falling layer stays off, because the reported probability of precipitation
+  was below the 50 percent threshold.
 
 ### Fixed
 

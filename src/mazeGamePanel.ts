@@ -30,12 +30,13 @@ const WEATHER_STYLES = {
  * remain in place when the refresh toggle is off.
  */
 const CURRENT_RENDER = {
-    background: 'night',
-    tone: 'medium',
+    background: 'day',
+    tone: 'hot',
     precipitation: 'stormy',
-    // The recorded forecast was "Slight Chance Showers And Thunderstorms then
-    // Partly Cloudy", so the sky is stormy but nothing is falling yet. Clouds
-    // draw, rain does not, until a refresh reports a real chance.
+    // The recorded forecast was "Slight Chance Showers And Thunderstorms" at
+    // 87F with a reported probability of 18 percent, so the sky is stormy but
+    // nothing is falling. Clouds draw, rain does not, until a refresh reports
+    // a probability at or above the 50 percent threshold.
     precipitating: false
 };
 
